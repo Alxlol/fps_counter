@@ -1,6 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
+class Position {
+  const Position({this.left, this.right, this.top, this.bottom});
+
+  final double? left;
+  final double? right;
+  final double? top;
+  final double? bottom;
+}
+
 class FpsCounter extends StatefulWidget {
   const FpsCounter({
     super.key,
@@ -9,11 +18,13 @@ class FpsCounter extends StatefulWidget {
     this.smoothing = true,
     this.textSize = 14,
     this.onFrameCallback,
+    this.position = const Position(left: 16, top: 16, right: 0, bottom: 0),
   });
 
   final Widget child;
   final Color backgroundColor;
   final double textSize;
+  final Position position;
 
   /// Callback that fires each frame, returns the current fps. Be careful with this :)
   final Function(double fps)? onFrameCallback;
@@ -83,8 +94,10 @@ class _FpsCounterState extends State<FpsCounter> {
   void _insertFpsOverlay() {
     fpsOverlay = OverlayEntry(
       builder: (context) => Positioned(
-        top: 16,
-        left: 16,
+        top: widget.position.left,
+        left: widget.position.left,
+        right: widget.position.right,
+        bottom: widget.position.bottom,
         child: Material(
           color: Colors.transparent,
           child: Container(
