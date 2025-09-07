@@ -18,13 +18,21 @@ class FpsCounter extends StatefulWidget {
     this.smoothing = true,
     this.textSize = 14,
     this.onFrameCallback,
-    this.position = const Position(left: 16, top: 16, right: 0, bottom: 0),
+    this.position = const Position(
+      left: 16,
+      top: 16,
+      right: null,
+      bottom: null,
+    ),
+    this.disabled = false,
   });
 
   final Widget child;
   final Color backgroundColor;
   final double textSize;
   final Position position;
+
+  final bool disabled;
 
   /// Callback that fires each frame, returns the current fps. Be careful with this :)
   final Function(double fps)? onFrameCallback;
@@ -46,6 +54,10 @@ class _FpsCounterState extends State<FpsCounter> {
   @override
   void initState() {
     super.initState();
+    if (widget.disabled) {
+      debugPrint('\x1B[33m== FPS COUNTER DISABLED ==\x1B[0m');
+      return;
+    }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _insertFpsOverlay();
     });
@@ -94,7 +106,7 @@ class _FpsCounterState extends State<FpsCounter> {
   void _insertFpsOverlay() {
     fpsOverlay = OverlayEntry(
       builder: (context) => Positioned(
-        top: widget.position.left,
+        top: widget.position.top,
         left: widget.position.left,
         right: widget.position.right,
         bottom: widget.position.bottom,
