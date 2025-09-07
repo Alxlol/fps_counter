@@ -8,6 +8,6 @@ See: https://github.com/flutter/flutter/issues/69949
 # Add to project:
 
 Add to your pubspec.yaml
-fps_counter:
-git:
-url: https://github.com/Alxlol/fps_counter
+`fps_counter:
+    git:
+        url: https://github.com/Alxlol/fps_counter`
