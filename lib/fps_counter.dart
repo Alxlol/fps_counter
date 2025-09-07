@@ -11,6 +11,9 @@ class Position {
 }
 
 /// Run with: flutter run --dart-define=FPS_COUNTER=true
+///
+/// WARNING: Hot restarting in debug will cause the ticker to throw an error on each frame, hot reload works as normal.
+/// See: https://github.com/flutter/flutter/issues/69949
 class FpsCounter {
   static bool _initialized = false;
 
