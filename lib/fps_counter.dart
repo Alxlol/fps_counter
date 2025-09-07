@@ -33,12 +33,10 @@ class FpsCounter {
     Position position = const Position(left: 16, top: 16),
   }) {
     if (!_isFpsEnabled || _initialized) {
-      if (!_isFpsEnabled) {
-        debugPrint('\x1B[33m== FPS COUNTER DISABLED ==\x1B[0m');
-      }
       return;
     }
 
+    debugPrint('\x1B[32m== FPS COUNTER ENABLED ==\x1B[0m');
     _initialized = true;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
