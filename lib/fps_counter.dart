@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
+// Issue with properly disposing things during hot restart causing the ticker to fire errors on every frame
+// https://github.com/flutter/flutter/issues/69949
+
 class Position {
   const Position({this.left, this.right, this.top, this.bottom});
 
