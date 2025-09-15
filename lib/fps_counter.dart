@@ -18,7 +18,7 @@ class FpsCounter {
   static bool _initialized = false;
 
   static const bool _isFpsEnabled = bool.fromEnvironment(
-    'FPS_COUNTER',
+    'fps_counter',
     defaultValue: false,
   );
 
@@ -112,7 +112,7 @@ class _FpsOverlayManager {
   void _insertFpsOverlay() {
     final context =
         WidgetsBinding.instance.focusManager.primaryFocus?.context ??
-        WidgetsBinding.instance.rootElement;
+            WidgetsBinding.instance.rootElement;
 
     if (context == null) {
       debugPrint('Could not find context to attach FPS counter');

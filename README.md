@@ -12,7 +12,7 @@ void main() {
 }
 ```
 
-then run your project with flutter run --dart-define=FPS_COUNTER=true
+then run your project with flutter run --dart-define=fps_counter=true
 
 Some settings are avaible through the initialize method:
 
