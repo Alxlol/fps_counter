@@ -12,7 +12,7 @@ void main() {
 }
 ```
 
-then run your project with `flutter run --profile --dart-define=fps_counter=true.`
+then run your project with `flutter run --profile --dart-define=fps_counter=true`.
 The package will be removed through tree shaking in a release build unless you build your app with the `--dart-define=fps_counter=true` flag
 Some settings are available through the initialize method:
 
