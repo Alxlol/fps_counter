@@ -1,6 +1,6 @@
 name: fps_counter
-description: 'An fps counter widget for flutter'
-version: 0.0.4
+description: 'An fps counter for flutter'
+version: 0.1.0
 homepage:
 
 environment:
