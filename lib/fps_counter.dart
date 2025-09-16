@@ -11,10 +11,10 @@ class Position {
   final double? bottom;
 }
 
-/// Run with: flutter run --dart-define=fps_counter=true
+/// Run with: flutter run --profile --dart-define=fps_counter=true
 ///
-/// WARNING: Hot restarting in debug will cause the ticker to throw an error on each frame, hot reload works as normal.
-/// See: https://github.com/flutter/flutter/issues/69949
+/// WARNING: Hot restarting in debugMode will cause the ticker to throw an error on each frame, hot reload works as normal.
+/// See: https://github.com/flutter/flutter/issues/10437
 class FpsCounter {
   static bool _initialized = false;
 
@@ -36,6 +36,10 @@ class FpsCounter {
     Function(double fps)? onFrameCallback,
     Position position = const Position(left: 16, top: 16),
   }) {
+    if (kDebugMode && _isFpsEnabled) {
+      debugPrint(
+          '\x1B[31m== WARNING: Fps counter enabled in debug mode. Hot restarting the app will throw an error each frame. See: https://github.com/flutter/flutter/issues/10437 ==\x1B[0m');
+    }
     if (!_isFpsEnabled || _initialized) {
       return;
     }
