@@ -78,12 +78,10 @@ packages:
   fps_counter:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "712f06128e8c4ffa8c518775f04425b875b11d2d"
-      url: "https://github.com/Alxlol/fps_counter"
-    source: git
-    version: "0.0.4"
+      path: ".."
+      relative: true
+    source: path
+    version: "0.1.0"
   leak_tracker:
     dependency: transitive
     description:

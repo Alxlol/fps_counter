@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -17,6 +20,7 @@ class Position {
 /// See: https://github.com/flutter/flutter/issues/10437
 class FpsCounter {
   static bool _initialized = false;
+  static _FpsOverlayManager? _overlayManager; // Store reference to manager
 
   static const bool _isFpsEnabled = bool.fromEnvironment(
     'fps_counter',
@@ -45,39 +49,83 @@ class FpsCounter {
     }
 
     debugPrint('\x1B[32m== FPS COUNTER ENABLED ==\x1B[0m');
+
+    // Register service extensions for DevTools communication
+    _registerServiceExtensions();
+
     _initialized = true;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _FpsOverlayManager(
+      _overlayManager = _FpsOverlayManager(
         backgroundColor: backgroundColor,
         smoothing: smoothing,
         textSize: textSize,
         onFrameCallback: onFrameCallback,
         position: position,
-      )._start();
+      );
+      _overlayManager!._start();
     });
+  }
+
+  static void _registerServiceExtensions() {
+    if (kDebugMode) {
+      // Get current smoothing state
+      registerExtension('ext.fps_counter.getSmoothing',
+          (method, parameters) async {
+        final smoothing = _overlayManager?.smoothing ?? false;
+        return ServiceExtensionResponse.result(jsonEncode({
+          'smoothing': smoothing,
+        }));
+      });
+
+      // Set smoothing state
+      registerExtension('ext.fps_counter.setSmoothing',
+          (method, parameters) async {
+        final enabled = parameters['enabled'] == 'true';
+        _overlayManager?.updateSmoothing(enabled);
+        print('SET SMOOTHING RECEIVED: $enabled');
+
+        // Post event to notify DevTools of the change
+        postEvent('fps_counter.smoothingChanged', {
+          'smoothing': enabled,
+        });
+
+        return ServiceExtensionResponse.result(jsonEncode({
+          'smoothing': enabled,
+        }));
+      });
+    }
   }
 }
 
 class _FpsOverlayManager {
   _FpsOverlayManager({
     required this.backgroundColor,
-    required this.smoothing,
+    required bool smoothing,
     required this.textSize,
     required this.onFrameCallback,
     required this.position,
-  });
+  }) : _smoothing = smoothing;
 
   final Color backgroundColor;
-  final bool smoothing;
+  bool _smoothing; // Make this mutable
   final double textSize;
   final Function(double fps)? onFrameCallback;
   final Position position;
+
+  // Getter for smoothing
+  bool get smoothing => _smoothing;
 
   OverlayEntry? _fpsOverlay;
   Ticker? _ticker;
   final ValueNotifier<double> _fps = ValueNotifier<double>(0.0);
   Duration? _lastFrameTime;
+
+  // Method to update smoothing from service extension
+  void updateSmoothing(bool newSmoothing) {
+    _smoothing = newSmoothing;
+    print('Smoothing updated to: $_smoothing');
+  }
 
   void _start() {
     Future.delayed(Duration(milliseconds: 100), () {
@@ -93,7 +141,8 @@ class _FpsOverlayManager {
       final deltaSeconds = deltaTime.inMicroseconds / 1000000.0;
       if (deltaSeconds > 0) {
         final fps = 1.0 / deltaSeconds;
-        if (smoothing) {
+        if (_smoothing) {
+          // Use the mutable _smoothing variable
           _fps.value = _fps.value * 0.9 + fps * 0.1;
         } else {
           _fps.value = fps;
