@@ -80,10 +80,10 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "712f06128e8c4ffa8c518775f04425b875b11d2d"
+      resolved-ref: "29e4bc3b077678ee39a63ddaf098d6c069a48f7f"
       url: "https://github.com/Alxlol/fps_counter"
     source: git
-    version: "0.0.4"
+    version: "0.1.0"
   leak_tracker:
     dependency: transitive
     description:
