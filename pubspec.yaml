@@ -1,6 +1,6 @@
 name: fps_counter
 description: 'An fps counter for flutter'
-version: 0.1.0
+version: 0.1.1
 repository: https://github.com/Alxlol/fps_counter
 
 environment:
