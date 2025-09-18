@@ -2,21 +2,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
-class Position {
-  const Position({this.left, this.right, this.top, this.bottom});
-
-  final double? left;
-  final double? right;
-  final double? top;
-  final double? bottom;
-}
-
 /// Run with: flutter run --profile --dart-define=fps_counter=true
 ///
 /// WARNING: Hot restarting in debugMode will cause the ticker to throw an error on each frame, hot reload works as normal.
 /// See: https://github.com/flutter/flutter/issues/10437
 class FpsCounter {
   static bool _initialized = false;
+  static FpsCounterOverlay? fpsCounterOverlay;
 
   static const bool _isFpsEnabled = bool.fromEnvironment(
     'fps_counter',
@@ -36,11 +28,11 @@ class FpsCounter {
     Function(double fps)? onFrameCallback,
     Position position = const Position(left: 16, top: 16),
   }) {
-    if (kDebugMode && _isFpsEnabled) {
+    if (kDebugMode) {
       debugPrint(
           '\x1B[31m== WARNING: Fps counter enabled in debug mode. Hot restarting the app will throw an error each frame. See: https://github.com/flutter/flutter/issues/10437 ==\x1B[0m');
     }
-    if (!_isFpsEnabled || _initialized) {
+    if (_initialized || !_isFpsEnabled) {
       return;
     }
 
@@ -48,28 +40,48 @@ class FpsCounter {
     _initialized = true;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _FpsOverlayManager(
+      fpsCounterOverlay = FpsCounterOverlay(
         backgroundColor: backgroundColor,
         smoothing: smoothing,
         textSize: textSize,
         onFrameCallback: onFrameCallback,
         position: position,
-      )._start();
+      );
     });
+  }
+
+  static void hideFps() {
+    if (fpsCounterOverlay != null) {
+      fpsCounterOverlay!._hide();
+    }
+  }
+
+  static void showFps() {
+    if (fpsCounterOverlay != null) {
+      fpsCounterOverlay!._show();
+    }
+  }
+
+  static void setSmoothing(bool value) {
+    if (fpsCounterOverlay != null) {
+      fpsCounterOverlay!.smoothing = value;
+    }
   }
 }
 
-class _FpsOverlayManager {
-  _FpsOverlayManager({
+class FpsCounterOverlay {
+  FpsCounterOverlay({
     required this.backgroundColor,
     required this.smoothing,
     required this.textSize,
     required this.onFrameCallback,
     required this.position,
-  });
+  }) {
+    _start();
+  }
 
   final Color backgroundColor;
-  final bool smoothing;
+  bool smoothing = false;
   final double textSize;
   final Function(double fps)? onFrameCallback;
   final Position position;
@@ -111,6 +123,21 @@ class _FpsOverlayManager {
       return Colors.yellow;
     } else {
       return Colors.red;
+    }
+  }
+
+  void _hide() {
+    _ticker?.stop();
+    _fpsOverlay?.remove();
+    _fpsOverlay = null;
+  }
+
+  void _show() {
+    if (_fpsOverlay == null) {
+      _insertFpsOverlay();
+    }
+    if (_ticker != null && !_ticker!.isTicking) {
+      _ticker?.start();
     }
   }
 
@@ -158,4 +185,13 @@ class _FpsOverlayManager {
 
     Overlay.of(context).insert(_fpsOverlay!);
   }
+}
+
+class Position {
+  const Position({this.left, this.right, this.top, this.bottom});
+
+  final double? left;
+  final double? right;
+  final double? top;
+  final double? bottom;
 }
