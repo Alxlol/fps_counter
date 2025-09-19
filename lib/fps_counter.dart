@@ -40,14 +40,14 @@ class FpsCounter {
       double textSize = 14,
       Function(double fps)? onFrameCallback,
       bool startHidden = false,
-      Position position = const Position(left: 16, top: 16),
-  }) {
+      Position position = const Position(left: 16, top: 16)}) {
+    if (!kProfileMode && !_isFpsEnabled || _initialized) {
+      return;
+    }
+
     if (kDebugMode) {
       debugPrint(
           '\x1B[31m== WARNING: Fps counter enabled in debug mode. Hot restarting the app will throw an error each frame. See: https://github.com/flutter/flutter/issues/10437 ==\x1B[0m');
-    }
-    if (_initialized || !_isFpsEnabled) {
-      return;
     }
 
     debugPrint('\x1B[32m== FPS COUNTER ENABLED ==\x1B[0m');
@@ -64,24 +64,6 @@ class FpsCounter {
         startHidden: startHidden,
       );
     });
-  }
-
-  static void hideFps() {
-    if (fpsCounterOverlay != null) {
-      fpsCounterOverlay!._hide();
-    }
-  }
-
-  static void showFps() {
-    if (fpsCounterOverlay != null) {
-      fpsCounterOverlay!._show();
-    }
-  }
-
-  static void setSmoothing(bool value) {
-    if (fpsCounterOverlay != null) {
-      fpsCounterOverlay!.smoothing = value;
-    }
   }
 }
 
@@ -168,7 +150,7 @@ class FpsCounterOverlay {
             WidgetsBinding.instance.rootElement;
 
     if (context == null) {
-      debugPrint('Could not find context to attach FPS counter');
+      printError('Could not find context to attach FPS counter');
       return;
     }
 
@@ -206,13 +188,4 @@ class FpsCounterOverlay {
 
     Overlay.of(context).insert(_fpsOverlay!);
   }
-}
-
-class Position {
-  const Position({this.left, this.right, this.top, this.bottom});
-
-  final double? left;
-  final double? right;
-  final double? top;
-  final double? bottom;
 }
