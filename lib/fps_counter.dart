@@ -26,7 +26,8 @@ class FpsCounter {
 
     /// Callback that fires each frame, returns the current fps. Be careful with this :)
     Function(double fps)? onFrameCallback,
-    Position position = const Position(left: 16, top: 16),
+      bool startHidden = false,
+      Position position = const Position(left: 16, top: 16),
   }) {
     if (kDebugMode) {
       debugPrint(
@@ -38,6 +39,7 @@ class FpsCounter {
 
     debugPrint('\x1B[32m== FPS COUNTER ENABLED ==\x1B[0m');
     _initialized = true;
+    visibility = !startHidden;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       fpsCounterOverlay = FpsCounterOverlay(
@@ -46,6 +48,7 @@ class FpsCounter {
         textSize: textSize,
         onFrameCallback: onFrameCallback,
         position: position,
+        startHidden: startHidden,
       );
     });
   }
@@ -76,8 +79,9 @@ class FpsCounterOverlay {
     required this.textSize,
     required this.onFrameCallback,
     required this.position,
+    required this.startHidden,
   }) {
-    _start();
+    _start(startHidden);
   }
 
   final Color backgroundColor;
@@ -85,15 +89,19 @@ class FpsCounterOverlay {
   final double textSize;
   final Function(double fps)? onFrameCallback;
   final Position position;
+  final bool startHidden;
 
   OverlayEntry? _fpsOverlay;
   Ticker? _ticker;
   final ValueNotifier<double> _fps = ValueNotifier<double>(0.0);
   Duration? _lastFrameTime;
 
-  void _start() {
+  void _start(bool startHidden) {
     Future.delayed(Duration(milliseconds: 100), () {
       _insertFpsOverlay();
+      if (startHidden) {
+        _hide();
+      }
     });
     _ticker = Ticker(_updateFps);
     _ticker?.start();
