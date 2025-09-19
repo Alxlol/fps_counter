@@ -1,31 +1,44 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:fps_counter/utils.dart';
 
-/// Run with: flutter run --profile --dart-define=fps_counter=true
-///
-/// WARNING: Hot restarting in debugMode will cause the ticker to throw an error on each frame, hot reload works as normal.
-/// See: https://github.com/flutter/flutter/issues/10437
 class FpsCounter {
   static bool _initialized = false;
   static FpsCounterOverlay? fpsCounterOverlay;
-
   static const bool _isFpsEnabled = bool.fromEnvironment(
     'fps_counter',
     defaultValue: false,
   );
+  static bool visibility = false;
 
-  /// Call this once in main() to enable FPS overlay.
-  /// Then run your project with flutter run --dart-define=fps_counter=true
-  static void initialize({
-    Color backgroundColor = Colors.black54,
+  static bool toggleVisibility() {
+    setVisibility(!visibility);
+    return visibility;
+  }
 
-    /// Averages readings, prevents wild fluctuations in the displayed FPS if set to true
-    bool smoothing = false,
-    double textSize = 14,
+  static void setVisibility(bool value) {
+    value ? fpsCounterOverlay?._show() : fpsCounterOverlay?._hide();
+    visibility = value;
+  }
 
-    /// Callback that fires each frame, returns the current fps. Be careful with this :)
-    Function(double fps)? onFrameCallback,
+  static void toggleSmoothing() {
+    if (fpsCounterOverlay != null) {
+      fpsCounterOverlay!.smoothing
+          ? fpsCounterOverlay?.smoothing = false
+          : fpsCounterOverlay?.smoothing = true;
+    }
+  }
+
+  static void setSmoothing(bool value) {
+    fpsCounterOverlay?.smoothing = value;
+  }
+
+  static void initialize(
+      {Color backgroundColor = Colors.black54,
+      bool smoothing = false,
+      double textSize = 14,
+      Function(double fps)? onFrameCallback,
       bool startHidden = false,
       Position position = const Position(left: 16, top: 16),
   }) {
