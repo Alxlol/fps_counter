@@ -31,8 +31,7 @@ dependencies:
     flutter:
         sdk: flutter
     fps_counter:
-        git:
-            url: https://github.com/Alxlol/fps_counter
+        path: ../
 
     # The following adds the Cupertino Icons font to your application.
     # Use with the CupertinoIcons class for iOS style icons.

@@ -24,9 +24,17 @@ class ExampleApp extends StatelessWidget {
             spacing: 6,
             children: <Widget>[
               OutlinedButton(
-                  onPressed: FpsCounter.hideFps, child: Text('Hide')),
+                  onPressed: FpsCounter.toggleVisibility,
+                  child: Text('Toogle visibility')),
               OutlinedButton(
-                  onPressed: FpsCounter.showFps, child: Text('Show')),
+                  onPressed: () => FpsCounter.setVisibility(false),
+                  child: Text('Hide')),
+              OutlinedButton(
+                  onPressed: () => FpsCounter.setVisibility(true),
+                  child: Text('Show')),
+              OutlinedButton(
+                  onPressed: () => FpsCounter.toggleSmoothing(),
+                  child: Text('Toggle smoothing')),
               OutlinedButton(
                   onPressed: () => FpsCounter.setSmoothing(false),
                   child: Text('Disabled smoothing')),
