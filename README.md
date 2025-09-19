@@ -12,19 +12,22 @@ void main() {
 }
 ```
 
-then run your project with `flutter run --profile --dart-define=fps_counter=true`.
-The package will be removed through tree shaking in a release build unless you build your app with the `--dart-define=fps_counter=true` flag
-Some settings are available through the initialize method:
+then run your project in profile mode -- `flutter run --profile`.
+If you want the fps counter enabled in debug or release mode you can run your app with the `--dart-define=fps_counter=true` flag.
+
+## Options:
 
 ```dart
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  FpsCounter.initialize(position: Position(bottom: 16, right: 16), smoothing: false, backgroundColor: Colors.transparent);
+  FpsCounter.initialize(position: Position(bottom: 16, right: 16), smoothing: false, backgroundColor: Colors.transparent, startHidden: true);
   runApp(const MyApp());
 }
 ```
 
-WARNING: Hot restarting in debug will cause the ticker to throw an error on each frame, hot reload works as normal.
+## Running in debug WARNING:
+
+Hot restarting in debug mode will cause the ticker to throw an error on each frame, hot reload works as normal.
 See:
 https://github.com/flutter/flutter/issues/69949
 https://github.com/flutter/flutter/issues/10437
