@@ -12,8 +12,11 @@ void main() {
 }
 ```
 
-then run your project in profile mode -- `flutter run --profile`.
-If you want the fps counter enabled in debug or release mode you can run your app with the `--dart-define=fps_counter=true` flag.
+Run your project in profile mode: `flutter run --profile`.
+
+### Running in debug or release:
+
+If you want the fps counter enabled in debug or release mode you can run or build your app with `--dart-define=fps_counter=true`
 
 ## Options:
 
