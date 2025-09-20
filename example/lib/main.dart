@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fps_counter/fps_counter.dart';
 
@@ -23,24 +24,26 @@ class ExampleApp extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             spacing: 6,
             children: <Widget>[
-              OutlinedButton(
-                  onPressed: FpsCounter.toggleVisibility,
-                  child: Text('Toogle visibility')),
-              OutlinedButton(
-                  onPressed: () => FpsCounter.setVisibility(false),
-                  child: Text('Hide')),
-              OutlinedButton(
-                  onPressed: () => FpsCounter.setVisibility(true),
-                  child: Text('Show')),
-              OutlinedButton(
-                  onPressed: () => FpsCounter.toggleSmoothing(),
-                  child: Text('Toggle smoothing')),
-              OutlinedButton(
-                  onPressed: () => FpsCounter.setSmoothing(false),
-                  child: Text('Disabled smoothing')),
-              OutlinedButton(
-                  onPressed: () => FpsCounter.setSmoothing(true),
-                  child: Text('Enable smoothing'))
+              if (kProfileMode) ...{
+                OutlinedButton(
+                    onPressed: FpsCounter.toggleVisibility,
+                    child: Text('Toogle visibility')),
+                OutlinedButton(
+                    onPressed: () => FpsCounter.setVisibility(false),
+                    child: Text('Hide')),
+                OutlinedButton(
+                    onPressed: () => FpsCounter.setVisibility(true),
+                    child: Text('Show')),
+                OutlinedButton(
+                    onPressed: () => FpsCounter.toggleSmoothing(),
+                    child: Text('Toggle smoothing')),
+                OutlinedButton(
+                    onPressed: () => FpsCounter.setSmoothing(false),
+                    child: Text('Disabled smoothing')),
+                OutlinedButton(
+                    onPressed: () => FpsCounter.setSmoothing(true),
+                    child: Text('Enable smoothing'))
+              }
             ],
           ),
         ),
