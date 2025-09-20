@@ -4,36 +4,11 @@ import 'package:flutter/scheduler.dart';
 import 'package:fps_counter/utils.dart';
 
 class FpsCounter {
-  static bool _initialized = false;
-  static FpsCounterOverlay? fpsCounterOverlay;
   static const bool _isFpsEnabled = bool.fromEnvironment(
     'fps_counter',
     defaultValue: false,
   );
-  static bool visibility = false;
-
-  static bool toggleVisibility() {
-    setVisibility(!visibility);
-    return visibility;
-  }
-
-  static void setVisibility(bool value) {
-    value ? fpsCounterOverlay?._show() : fpsCounterOverlay?._hide();
-    visibility = value;
-  }
-
-  static void toggleSmoothing() {
-    if (fpsCounterOverlay != null) {
-      fpsCounterOverlay!.smoothing
-          ? fpsCounterOverlay?.smoothing = false
-          : fpsCounterOverlay?.smoothing = true;
-    }
-  }
-
-  static void setSmoothing(bool value) {
-    fpsCounterOverlay?.smoothing = value;
-  }
-
+  static bool _initialized = false;
   static void initialize(
       {Color backgroundColor = Colors.black54,
       bool smoothing = false,
@@ -41,7 +16,7 @@ class FpsCounter {
       Function(double fps)? onFrameCallback,
       bool startHidden = false,
       Position position = const Position(left: 16, top: 16)}) {
-    if (!kProfileMode && !_isFpsEnabled || _initialized) {
+    if ((!kProfileMode && !_isFpsEnabled) || _initialized) {
       return;
     }
 
@@ -64,6 +39,31 @@ class FpsCounter {
         startHidden: startHidden,
       );
     });
+  }
+
+  static FpsCounterOverlay? fpsCounterOverlay;
+  static bool visibility = false;
+
+  static bool toggleVisibility() {
+    setVisibility(!visibility);
+    return visibility;
+  }
+
+  static void setVisibility(bool value) {
+    value ? fpsCounterOverlay?._show() : fpsCounterOverlay?._hide();
+    visibility = value;
+  }
+
+  static void toggleSmoothing() {
+    if (fpsCounterOverlay != null) {
+      fpsCounterOverlay!.smoothing
+          ? fpsCounterOverlay?.smoothing = false
+          : fpsCounterOverlay?.smoothing = true;
+    }
+  }
+
+  static void setSmoothing(bool value) {
+    fpsCounterOverlay?.smoothing = value;
   }
 }
 
